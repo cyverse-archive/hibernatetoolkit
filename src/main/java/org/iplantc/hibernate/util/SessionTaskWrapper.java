@@ -9,7 +9,7 @@ import org.hibernate.Transaction;
 
 /**
  * Wraps a task in a Hibernate session.
- * 
+ *
  * @author Dennis Roberts
  */
 public class SessionTaskWrapper {
@@ -33,7 +33,7 @@ public class SessionTaskWrapper {
 
     /**
      * Performs a task.
-     * 
+     *
      * @param <T> the return type of the task.
      * @param task the task.
      * @return the result of performing the task.
@@ -67,17 +67,27 @@ public class SessionTaskWrapper {
 
     /**
      * Log the result of calling nextException if the result is not null.
-     * 
+     *
      * @param e the source exception.
      */
     private void logNextException(HibernateException e) {
         for (Throwable currException = e; currException != null; currException = currException.getCause()) {
             if (currException instanceof SQLException) {
-                Throwable nextException = (SQLException) currException;
-                if (nextException != null) {
-                    LOG.error("Next Exception for " + currException, nextException);
-                }
+                logNextExceptionChain((SQLException) currException);
             }
+        }
+    }
+
+    /**
+     * Recursively logs all SQL exceptions in a chain obtained by repeatedly calling getNextException.
+     *
+     * @param currException the current exception.
+     */
+    private void logNextExceptionChain(SQLException currException) {
+        SQLException nextException = currException.getNextException();
+        if (nextException != null) {
+            LOG.error("Next Exception for " + currException, nextException);
+            logNextExceptionChain(nextException);
         }
     }
 }
