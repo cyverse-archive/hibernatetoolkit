@@ -4,7 +4,7 @@
     <groupId>org.iplantc.core</groupId>
     <artifactId>hibernatetoolkit</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.2-SNAPSHOT</version>
+    <version>1.8.4-SNAPSHOT</version>
     <name>hibernate toolkit</name>
     <url>http://iplantc.org/</url>
     <properties>
